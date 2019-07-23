@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Exercice 1</title>
+		<style>
+			#fond {
+				height: 500px;
+				position: absolute;
+				width: 600px;
+				background: lightyellow;
+				top: 100px;
+				left: 100px;
+			}
+
+			#etagere_a {
+				height: 10px;
+				width: 200px;
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+				background: darkgray;
+			}
+
+            #etagere_b{
+                height: 10px;
+				width: 200px;
+				position: absolute;
+				bottom: 100px;
+				left: 350px;
+				background: darkgrey;
+            }
+
+            #pos_a{
+                height: 250px;
+				width: 200px;
+				position: absolute;
+				bottom: 0px;
+				left: 10px;
+            }
+
+            #pos_b{
+                height: 250px;
+				width: 200px;
+				position: absolute;
+				bottom: 90px;
+				left: 350px;
+            }
+
+			#pot {
+				height: 80px;
+				width: 80px;
+				position: absolute;
+				left: 70px;
+				bottom: 0px;
+				background: sandybrown;
+			}
+            #tige {
+                height: 120px;
+				width: 10px;
+				position: absolute;
+				left: 105px;
+				bottom: 80px;
+				background: limegreen;
+            }
+            #feuille_1 {
+                height: 20px;
+				width: 40px;
+				position: absolute;
+				left: 105px;
+				bottom: 120px;
+				background: limegreen;
+            }
+            #feuille_2 {
+                height: 20px;
+				width: 40px;
+				position: absolute;
+				left: 70px;
+				bottom: 100px;
+				background: limegreen;
+            }
+            #petale_1{
+                height: 40px;
+				width: 40px;
+				position: absolute;
+				left: 90px;
+				bottom: 170px;
+				background: rgba(225,191,0,0.7);
+                border-radius: 100%;
+                animation: color 5s linear 2s infinite alternate;
+            }
+            #petale_2{
+                height: 40px;
+				width: 40px;
+				position: absolute;
+				left: 80px;
+				bottom: 180px;
+				background: rgba(225,191,0,0.7);
+                border-radius: 100%;
+                animation: color 5s linear 2s infinite alternate;
+
+            }
+            #petale_3{
+                height: 40px;
+				width: 40px;
+				position: absolute;
+				left: 100px;
+				bottom: 180px;
+				background: rgba(225,191,0,0.7);
+                border-radius: 100%;
+                animation: color 5s linear 2s infinite alternate;
+
+            }
+            #petale_4{
+                height: 40px;
+				width: 40px;
+				position: absolute;
+				left: 90px;
+				bottom: 190px;
+				background: rgba(225,191,0,0.7);
+                border-radius: 100%;
+                animation: color 5s linear 2s infinite alternate;
+
+            }
+            #pot_de_fleur{
+				cursor: pointer;
+                height: 250px;
+				width: 200px;
+				position: absolute;
+				bottom: 20px;
+				left: 10px;
+            }
+
+            @media screen and (min-width:700px){
+                @keyframes color{
+                    100%{
+                        background-color: rgba(100,149,237,0.7);
+                    }
+                }
+            }
+
+		</style>
+	</head>
+	<body>
+		<div id="fond">
+            <div id="pot_de_fleur" draggable="true"> 
+                <div id="pot" ></div>
+                <div id="tige" ></div>
+                <div id="feuille_1" ></div>
+                <div id="feuille_2" ></div>
+                <div id="petale_1" ></div>
+                <div id="petale_2" ></div>
+                <div id="petale_3"></div>
+                <div id="petale_4" ></div>
+            </div>
+            <div id="pos_a" ></div>
+			<div id="etagere_a" ></div>
+            <div id="pos_b"></div>
+            <div id="etagere_b"></div>
+		</div>
+	</body>
+
+    <script>
+
+        var element = document.getElementById("pot_de_fleur");
+
+        if(localStorage.getItem("pos") == "b"){
+            var destination = document.getElementById("pos_a");
+		    var source = document.getElementById("pos_b");
+            source.appendChild(document.getElementById("pot_de_fleur"));
+        } else {
+            var destination = document.getElementById("pos_b");
+		    var source = document.getElementById("pos_a");
+            source.appendChild(document.getElementById("pot_de_fleur"));
+        }
+
+
+        	function init(el, src, dest) {
+
+                element.focus();
+
+				function dragstartFn(e) {
+                    console.log('start');
+					e.dataTransfer.setData("text", e.target.id);
+				}
+
+				function dragendFn() {
+                                        console.log('end');
+
+				}
+
+				function dragoverFn(e) {
+                    console.log('over');
+					e.preventDefault();
+				}
+
+				function dropFn(e) {                    
+                    if(localStorage.getItem("pos") == "a"){
+                        localStorage.setItem("pos","b");
+                    } else {
+                        localStorage.setItem("pos","a");
+                    }
+                    console.log('drop');
+
+					e.preventDefault();
+					e.target.appendChild(document.getElementById("pot_de_fleur"));
+					el.removeEventListener("dragstart", dragstartFn);
+					el.removeEventListener("dragend", dragendFn);
+					dest.removeEventListener("dragover", dragoverFn);
+					dest.removeEventListener("drop", dropFn);
+					init(el, dest, src);
+				}
+
+                console.log('init');
+				el.addEventListener("dragstart", dragstartFn, false);
+				el.addEventListener("dragend", dragendFn, false);
+				dest.addEventListener("dragover", dragoverFn, false);
+				dest.addEventListener("drop", dropFn, false);
+			}
+			init(element, source, destination);
+
+    </script>
+
+</html>
